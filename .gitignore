@@ -1,0 +1,76 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# Virtual environment
+env/
+venv/
+ENV/
+
+# VS Code settings
+.vscode/
+
+# Model files
+*.h5
+*.keras
+*.pb
+
+# Data files
+*.csv
+*.tsv
+*.npz
+*.npy
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Flask static and uploads (optional, keep if you want to ignore uploaded files)
+# static/uploads/
+
+# Logs
+*.log
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test outputs
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# Pyre type checker
+.pyre/
+
+static/
