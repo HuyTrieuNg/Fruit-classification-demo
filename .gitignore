@@ -24,6 +24,7 @@ ENV/
 *.h5
 *.keras
 *.pb
+*.joblib
 
 # Data files
 *.csv

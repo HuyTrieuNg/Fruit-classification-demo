@@ -35,6 +35,13 @@
             required
           />
         </div>
+        <div class="mb-3">
+          <label for="model" class="form-label">Chọn mô hình dự đoán:</label>
+          <select class="form-select" id="model" name="model">
+            <option value="cnn" {% if selected_model == 'cnn' %}selected{% endif %}>CNN (Deep Learning)</option>
+            <option value="rf" {% if selected_model == 'rf' %}selected{% endif %}>Random Forest (Truyền thống)</option>
+          </select>
+        </div>
         <button class="btn btn-primary w-100" type="submit">
           Upload & Predict
         </button>
