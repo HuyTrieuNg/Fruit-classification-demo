@@ -38,8 +38,8 @@
         <div class="mb-3">
           <label for="model" class="form-label">Chọn mô hình dự đoán:</label>
           <select class="form-select" id="model" name="model">
-            <option value="cnn" {% if selected_model == 'cnn' %}selected{% endif %}>CNN (Deep Learning)</option>
-            <option value="rf" {% if selected_model == 'rf' %}selected{% endif %}>Random Forest (Truyền thống)</option>
+            <option value="cnn" {% if selected_model == 'cnn' %}selected{% endif %}>CNN</option>
+            <option value="rf" {% if selected_model == 'rf' %}selected{% endif %}>Random Forest</option>
           </select>
         </div>
         <button class="btn btn-primary w-100" type="submit">
@@ -50,6 +50,14 @@
       <div class="mt-4 text-center">
         <img src="/{{ img_path }}" class="result-img" alt="Uploaded Image" />
         <h4>Prediction: <span class="text-success">{{ prediction }}</span></h4>
+        {% if model_name %}
+        <div class="alert alert-info mt-3" role="alert">
+          <b>Model sử dụng:</b> {{ model_name }}<br>
+          {% if confidence is not none %}
+          <b>Độ tự tin:</b> {{ '%.2f'|format(confidence*100) }}%
+          {% endif %}
+        </div>
+        {% endif %}
       </div>
       {% endif %}
     </div>

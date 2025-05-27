@@ -26,13 +26,13 @@ def model_predict(img_path, model):
     x = np.expand_dims(x, axis=0)
     preds = model.predict(x)
     pred_class = np.argmax(preds, axis=1)[0]
-    return class_labels[pred_class]
+    confidence = float(np.max(preds))
+    return class_labels[pred_class], confidence
 
 def rf_predict(img_path, model, scaler):
     img = Image.open(img_path).convert('RGB')
     img = img.resize((128, 128))
     x = np.array(img)
-    # Extract features (must match training pipeline)
     from skimage.feature import graycomatrix, graycoprops, local_binary_pattern
     import cv2
     def extract_color_histogram(image, bins=(8, 8, 8)):
@@ -84,30 +84,36 @@ def rf_predict(img_path, model, scaler):
     ])
     combined_features = np.nan_to_num(combined_features, nan=0.0, posinf=np.finfo(np.float32).max, neginf=np.finfo(np.float32).min)
     features_scaled = scaler.transform([combined_features])
-    pred = model.predict(features_scaled)
-    return class_labels[int(pred[0])]
+    proba = model.predict_proba(features_scaled)[0]
+    pred = np.argmax(proba)
+    confidence = float(np.max(proba))
+    return class_labels[int(pred)], confidence
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     prediction = None
     img_path = None
     selected_model = 'cnn'
+    confidence = None
     if request.method == 'POST':
         if 'file' not in request.files:
-            return render_template('index.html', prediction=None, img_path=None, selected_model=selected_model)
+            return render_template('index.html', prediction=None, img_path=None, selected_model=selected_model, confidence=None, model_name=None)
         file = request.files['file']
         if file.filename == '':
-            return render_template('index.html', prediction=None, img_path=None, selected_model=selected_model)
+            return render_template('index.html', prediction=None, img_path=None, selected_model=selected_model, confidence=None, model_name=None)
         if file:
             filepath = os.path.join('static', file.filename)
             file.save(filepath)
             selected_model = request.form.get('model', 'cnn')
             if selected_model == 'cnn':
-                prediction = model_predict(filepath, model)
+                prediction, confidence = model_predict(filepath, model)
+                model_name = 'CNN'
             else:
-                prediction = rf_predict(filepath, rf_model, rf_scaler)
+                prediction, confidence = rf_predict(filepath, rf_model, rf_scaler)
+                model_name = 'Random Forest'
             img_path = filepath
-    return render_template('index.html', prediction=prediction, img_path=img_path, selected_model=selected_model)
+            return render_template('index.html', prediction=prediction, img_path=img_path, selected_model=selected_model, confidence=confidence, model_name=model_name)
+    return render_template('index.html', prediction=prediction, img_path=img_path, selected_model=selected_model, confidence=confidence, model_name=None)
 
 if __name__ == '__main__':
     if not os.path.exists('static'):
